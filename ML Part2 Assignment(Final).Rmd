@@ -1,6 +1,6 @@
 ---
 title: "ML_Assignment_STA380_jgscott"
-author: "Aditya Kumar, Barnana Ganguly ,Zihao Zhu, Nawen Deng"
+author: "Aditya Kumar, Barnana Ganguly, Nawen Deng, Zihao Zhu"
 date: "2023-08-14"
 output:
   html_document: default
@@ -61,13 +61,13 @@ I utilize the 'cosine' metric to assess similarity, which computes the cosine va
 ### (b)  Define Market Segment 
 I will define a "market segment" as a cluster of correlated interests. I chose this because of the way data was collected i.e., categorizing by themes which entails commonality and would be efficient to identify their clusters
 
-```{r hclust, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(proxy)
 d.cosine <- proxy::dist(as.matrix(TFIDF), method = "cosine")
 hc.ratio.cosine <- hclust(d.cosine, method = 'ward.D2')
 ```
 
-After evaluating various results across different values of K (using elbow graph), I opted for k=5 as our final parameter, as its outcome aligns more logically with our interpretation.
+After evaluating various results across different values of K, I opted for k=5 as our final parameter, as its outcome aligns more logically with our interpretation.
 
 ```{r cluster 5, echo=FALSE}
 # Load required libraries
@@ -140,6 +140,16 @@ Based on the topics with notable TFIDF scores within the clusters, I can deduce 
 *Cluster 5*: This audience, which is mostly made up of women (maybe housewives) interested in food, clothing, and beauty, offers an opportunity for interesting content. The business may concentrate on giving them useful material that relates to their interests, possibly working with influencers from these fields to increase interaction.
 
 
+
+
+
+
+
+
+
+
+
+
 ## Association Rule Mining 
 ### (a) Data Pre-Proccessing 
 ```{r groceries init, warning=FALSE, message=FALSE, include=FALSE}
@@ -196,7 +206,6 @@ sorted_frequencies <- sort(item_frequencies, decreasing = TRUE)
 
 # Select the top 10 items
 top_10 <- head(sorted_frequencies, 10)
-top_10
 
 #Create a bar plot for the top 10 items
 barplot(top_10, las = 2, cex.names = 0.6,
@@ -261,7 +270,6 @@ inspect(groceryrules_final1)
 sorted_rules <- inspect(subset(groceryrules_final1, subset = lift > 2))
 print(sorted_rules)
 
-
 # summary(groceryrules_final1)
 
 ```
@@ -281,20 +289,27 @@ subset_groc
 
 library(arulesViz)
 
+# Set a smaller plot size
+options(repr.plot.width = 10, repr.plot.height = 10)
+
 # Visualize association rules using a graph
-plot(subset_groc, method = "graph", control = list(type = "items", col= 'darkgreen'))
+plot(subset_groc, method = "graph", control = list(type = "items", col = 'darkgreen'))
 
 # Scatter plot between confidence and support
-plot(groceryrules_final1, shading = "order", control = list(main = "Two-key plot", col= 'darkgreen'))
+plot(groceryrules_final1, shading = "order", control = list(main = "Two-key plot", col = 'darkgreen'))
 
 # Matrix based visualization
-plot(subset_groc, method = "matrix", measure = "support", control= list(col='darkgreen')) 
+plot(subset_groc, method = "matrix", measure = "support", control = list(col = 'darkgreen')) 
 
 # Sample and visualize a subset of rules
 subrules <- sample(subset_groc, 20)
 # Use "drl" layout for better illustration
-plot(subrules, method = "graph", control = list(layout = "circle",col='darkgreen'))
+plot(subrules, method = "graph", control = list(layout = "circle", col = 'darkgreen'))
+
 ```
+
+
+
 The visualizations above gives us the strength f the associations. The first graph illustrates the relative value of the different basket elements. With branches stretching forth to other products, the center section contains whole milk and other veggies that used to be the most popular.
 
 The next one provides a two-key plot for the entire set of values as a function of support and confidence, not only for the subset.
